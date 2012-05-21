@@ -31,6 +31,12 @@ input[type="text"], #quick-keys button, code {
   font-family: "GillSans-Light", "Gill Sans", sans-serif;
 }
 
+body.visible input[type="text"] {
+  -moz-transition: background-color 1s;
+  -webkit-transition: background-color 1s;
+  -o-transition: background-color 1s;
+}
+
 input[type="text"] {
   display: block;
   width: 100%;
@@ -42,9 +48,6 @@ input[type="text"] {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  -moz-transition: background-color 1s;
-  -webkit-transition: background-color 1s;
-  -o-transition: background-color 1s;
 }
 
 input[type="text"]:focus {

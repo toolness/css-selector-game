@@ -105,8 +105,6 @@ function activateLevelGameLogic(cfg) {
     } else
       $("code#html").text(cfg.html);
   }).val("");
-  // Really not sure why we need a timeout to trigger this properly...
-  setTimeout(function() { $("input").trigger("change"); }, 1);
 }
 
 function loadLevel(number) {
@@ -128,8 +126,13 @@ function loadLevel(number) {
     $("#quick-keys").show();
     $("#instructions").html(cfg.instructions);
     $("input").removeAttr("disabled");
-    $("body").addClass("visible");
     activateLevelGameLogic(cfg);
+
+    // Really not sure why we need a timeout to trigger these properly...
+    setTimeout(function() {
+      $("body").addClass("visible");
+      $("input").trigger("change");
+    }, 1);
   });
 }
 
