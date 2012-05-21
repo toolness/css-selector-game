@@ -151,6 +151,10 @@ function loadLevel(number) {
       $("input").hide();
       $("code#html").empty();
     }
+    // Firefox
+    document.documentElement.scrollTop = 0;
+    // Mobile Safari
+    document.body.scrollTop = 0;
     
     // Really not sure why we need a timeout to trigger these properly...
     setTimeout(function() {
