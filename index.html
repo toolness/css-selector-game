@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+@media (min-width: 640px) {
+  body {
+    width: 640px;
+    margin: 0 auto;
+  }
+}
+
+body {
+  font-family: Baskerville, Georgia, serif;
+  font-size: 16px;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+}
+
+body.visible {
+  opacity: 1.0;
+}
+
+h1 {
+  font-weight: normal;
+  font-size: 24px;
+}
+
+input[type="text"], #quick-keys button, code {
+  font-family: "GillSans-Light", "Gill Sans", sans-serif;
+}
+
+input[type="text"] {
+  display: block;
+  width: 100%;
+  font-size: 20px;
+  margin-top: 4px;
+  border: 1px dotted gray;
+  padding: 4px;
+  font-weight: 100;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+#quick-keys button {
+  background: white;
+  padding: 5px;
+  width: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border: none;
+}
+
+#quick-keys button small {
+  display: block;
+  font-size: 12px;
+  font-weight: normal;
+  color: gray;
+}
+
+#instructions code {
+  background: #f0f0f0;
+  padding: 0px 4px 0px 4px;
+}
+
+code {
+  white-space: pre-wrap;
+  font-weight: 100;
+}
+
+code#html {
+  display: block;
+  padding-top: 10px;
+}
+</style>
+<title>CSS Leveler</title>
+<h1>Level <span class="level-number"></span></h1>
+<div id="instructions"></div>
+<div id="quick-keys" style="display: none">
+  <button>#<small>id</small></button>
+  <button>.<small>class</small></button>
+  <button>,<small>or</small></button>
+  <button>&gt;<small>child</small></button>
+  <button>*<small>any</small></button>
+  <button>+<small>sibling</small></button>
+  <button>:<small>pseudo</small></button>
+</div>
+<input type="text" autocorrect="off" autocomplete="off" autocapitalize="off"
+       placeholder="type a CSS selector here">
+<code id="html"></code>
+<script src="zepto.min.js"></script>
+<script src="slowparse.min.js"></script>
+<script src="main.js"></script>
