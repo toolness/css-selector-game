@@ -1,5 +1,8 @@
 "use strict";
 
+var FADE_OUT_DELAY = 650;
+var WIN_DELAY = 2000;
+
 var currLevel;
 
 function getLevelConfig(number, cb, delay) {
@@ -80,7 +83,7 @@ function winLevel() {
   $("input").attr("disabled", "disabled").blur();
   setTimeout(function() {
     window.location.hash = "#" + (currLevel + 1);
-  }, 1000);
+  }, WIN_DELAY);
 }
 
 function activateLevelGameLogic(cfg) {
@@ -111,7 +114,7 @@ function loadLevel(number) {
   if (currLevel == number)
     return;
   currLevel = number;
-  var delay = $("body").hasClass("visible") ? 650 : 0;
+  var delay = $("body").hasClass("visible") ? FADE_OUT_DELAY : 0;
   $("body").removeClass("visible");
   getLevelConfig(number, function(cfg) {
     if (currLevel != number)
