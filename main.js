@@ -2,11 +2,11 @@
 
 var currLevel;
 
-function getLevelConfig(number, cb) {
+function getLevelConfig(number, cb, delay) {
   var levelJSON, levelHTML, timeout = setTimeout(function() {
     timeout = null;
     maybeCallCb();
-  }, 650);
+  }, delay);
 
   function maybeCallCb() {
     if (levelJSON && levelHTML && timeout === null) {
@@ -77,7 +77,7 @@ function areEqual(arr1, arr2) {
 }
 
 function winLevel() {
-  $("input").attr("disabled", "disabled");
+  $("input").attr("disabled", "disabled").blur();
   setTimeout(function() {
     window.location.hash = "#" + (currLevel + 1);
   }, 1000);
@@ -111,6 +111,7 @@ function loadLevel(number) {
   if (currLevel == number)
     return;
   currLevel = number;
+  var delay = $("body").hasClass("visible") ? 650 : 0;
   $("body").removeClass("visible");
   getLevelConfig(number, function(cfg) {
     if (currLevel != number)
@@ -133,7 +134,7 @@ function loadLevel(number) {
       $("body").addClass("visible");
       $("input").trigger("change");
     }, 1);
-  });
+  }, delay);
 }
 
 $(window).bind("hashchange", function() {
