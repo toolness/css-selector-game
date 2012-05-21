@@ -3,10 +3,13 @@
 var currLevel;
 
 function getLevelConfig(number, cb) {
-  var levelJSON, levelHTML;
+  var levelJSON, levelHTML, timeout = setTimeout(function() {
+    timeout = null;
+    maybeCallCb();
+  }, 650);
 
   function maybeCallCb() {
-    if (levelJSON && levelHTML) {
+    if (levelJSON && levelHTML && timeout === null) {
       var parts = levelHTML.split("\n--\n");
       levelJSON.instructions = parts[0];
       levelJSON.html = parts[1];
@@ -27,6 +30,85 @@ function getLevelConfig(number, cb) {
   }, "text");
 }
 
+function showHighlights(html, slices) {
+  function sourceText(interval) {
+    return html.slice(interval.start, interval.end);
+  }
+  
+  var newSource = $("<div></div>"),
+      i = 0;
+  slices.sort(function(a, b) { return a.start - b.start; });
+  $.each(slices, function(n, slice) {
+    var span = $("<span></span>");
+    if (slice.start > i) {
+      newSource.append(document.createTextNode(sourceText({
+        start: i,
+        end: slice.start
+      })));
+    }
+    span.addClass("highlight")
+      .text(sourceText(slice))
+      .appendTo(newSource);
+    i = slice.end;
+  });
+  if (i < html.length) {
+    newSource.append(document.createTextNode(sourceText({
+      start: i,
+      end: undefined
+    })));
+  }
+  $("code#html").html(newSource.html());
+  setTimeout(function() {
+    $("code#html .highlight").addClass("visible");
+  }, 0);
+}
+
+function makeArray(arr) {
+  var realArray = [];
+  for (var i = 0; i < arr.length; i++)
+    realArray.push(arr[i]);
+  return realArray;
+}
+
+// http://stackoverflow.com/questions/1773069/using-jquery-to-compare-two-arrays
+function areEqual(arr1, arr2) {
+  return ($(arr1).not(arr2).length == 0 &&
+          $(arr2).not(arr1).length == 0);
+}
+
+function winLevel() {
+  $("input").attr("disabled", "disabled");
+  setTimeout(function() {
+    window.location.hash = "#" + (currLevel + 1);
+  }, 1000);
+}
+
+function activateLevelGameLogic(cfg) {
+  var docFrag = Slowparse.HTML(document, cfg.html).document;
+  var solution = makeArray(docFrag.querySelectorAll(cfg.selector));
+  $("input").unbind().bind("keyup change", function() {
+    if ($(this).attr("disabled"))
+      return;
+    var selector = $(this).val();
+    var selection = [];
+    try {
+      selection = makeArray(docFrag.querySelectorAll(selector));
+    } catch (e) {}
+    if (selection.length) {
+      var intervals = selection.map(function(node) { return {
+        start: node.parseInfo.openTag.start,
+        end: node.parseInfo.closeTag.end
+      }});
+      showHighlights(cfg.html, intervals);
+      if (areEqual(selection, solution))
+        winLevel();
+    } else
+      $("code#html").text(cfg.html);
+  }).val("");
+  // Really not sure why we need a timeout to trigger this properly...
+  setTimeout(function() { $("input").trigger("change"); }, 1);
+}
+
 function loadLevel(number) {
   if (currLevel == number)
     return;
@@ -45,11 +127,9 @@ function loadLevel(number) {
     });
     $("#quick-keys").show();
     $("#instructions").html(cfg.instructions);
+    $("input").removeAttr("disabled");
     $("body").addClass("visible");
-
-    var result = Slowparse.HTML(document, cfg.html);
-    var solution = result.document.querySelectorAll(cfg.selector);
-    $("code#html").text(cfg.html);
+    activateLevelGameLogic(cfg);
   });
 }
 
@@ -61,12 +141,9 @@ $(window).bind("hashchange", function() {
 
 $(window).ready(function() {
   var TOUCH_EVT = ("ontouchstart" in window) ? "touchstart" : "click";
-  $("input").bind("keyup", function() {
-    
-  });
   $("#quick-keys button").bind(TOUCH_EVT, function() {
     var character = this.firstChild.nodeValue;
-    $("input").val($("input").val() + character).focus();
+    $("input").val($("input").val() + character).focus().trigger("change");
     return false;
   });
   $(window).trigger("hashchange");

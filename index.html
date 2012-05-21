@@ -13,8 +13,8 @@ body {
   font-family: Baskerville, Georgia, serif;
   font-size: 16px;
   opacity: 0;
-  -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
 }
 
@@ -42,6 +42,18 @@ input[type="text"] {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  -moz-transition: background-color 1s;
+  -webkit-transition: background-color 1s;
+  -o-transition: background-color 1s;
+}
+
+input[type="text"]:focus {
+  outline-width: 0;
+}
+
+input[type="text"]:disabled {
+  background-color: lightgreen;
+  color: black;
 }
 
 #quick-keys button {
@@ -52,6 +64,7 @@ input[type="text"] {
   font-weight: bold;
   background-color: #f0f0f0;
   border: none;
+  cursor: pointer;
 }
 
 #quick-keys button small {
@@ -74,6 +87,16 @@ code {
 code#html {
   display: block;
   padding-top: 10px;
+}
+
+code#html .highlight {
+  -moz-transition: background-color 1s;
+  -webkit-transition: background-color 1s;
+  -o-transition: background-color 1s;
+}
+
+code#html .highlight.visible {
+  background-color: rgba(255, 255, 0, 0.4);
 }
 </style>
 <title>CSS Leveler</title>
