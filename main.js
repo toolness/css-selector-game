@@ -15,7 +15,7 @@ function getLevelConfig(number, cb, delay) {
     if (levelJSON && levelHTML && timeout === null) {
       var parts = levelHTML.split("\n--\n");
       levelJSON.instructions = parts[0];
-      levelJSON.html = parts[1];
+      levelJSON.html = parts[1] || "";
       cb(levelJSON);
     }
   }
@@ -27,10 +27,23 @@ function getLevelConfig(number, cb, delay) {
     levelJSON = json;
     maybeCallCb();
   });
-  $.get("levels/" + number + ".html", function(html) {
-    levelHTML = html;
-    maybeCallCb();
-  }, "text");
+  $.ajax({
+    url: "levels/" + number + ".html",
+    dataType: "text",
+    success: function(html) {
+      levelHTML = html;
+    },
+    error: function(req) {
+      levelJSON = {selector: null, keys: []};
+      if (req.status == 404)
+        levelHTML = $("#level-not-found").html();
+      else
+        levelHTML = $("#level-load-error").html();
+    },
+    complete: function() {
+      maybeCallCb();
+    }
+  });
 }
 
 function showHighlights(html, slices) {
@@ -90,7 +103,7 @@ function winLevel() {
 function activateLevelGameLogic(cfg) {
   var docFrag = Slowparse.HTML(document, cfg.html).document;
   var solution = makeArray(docFrag.querySelectorAll(cfg.selector));
-  $("input").unbind().bind("keyup change", function() {
+  $("input").bind("keyup change", function() {
     if ($(this).attr("disabled"))
       return;
     var selector = $(this).val();
@@ -117,6 +130,7 @@ function loadLevel(number) {
   currLevel = number;
   var delay = $("body").hasClass("visible") ? FADE_OUT_DELAY : 0;
   $("body").removeClass("visible");
+  $("input").unbind();
   getLevelConfig(number, function(cfg) {
     if (currLevel != number)
       return;
@@ -130,9 +144,14 @@ function loadLevel(number) {
     });
     $("#quick-keys").show();
     $("#instructions").html(cfg.instructions);
-    $("input").removeAttr("disabled");
-    activateLevelGameLogic(cfg);
-
+    $("input").show().removeAttr("disabled");
+    if (cfg.selector)
+      activateLevelGameLogic(cfg);
+    else {
+      $("input").hide();
+      $("code#html").empty();
+    }
+    
     // Really not sure why we need a timeout to trigger these properly...
     setTimeout(function() {
       $("body").addClass("visible");
