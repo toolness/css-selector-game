@@ -80,8 +80,9 @@ function areEqual(arr1, arr2) {
 }
 
 function winLevel() {
-  $("input").attr("disabled", "disabled").blur();
+  $("input").attr("disabled", "disabled");
   setTimeout(function() {
+    $("input").blur();
     window.location.hash = "#" + (currLevel + 1);
   }, WIN_DELAY);
 }
