@@ -164,6 +164,17 @@ function loadLevel(number) {
   }, delay);
 }
 
+function virtualKeypress() {
+  var character = this.firstChild.nodeValue;
+  var input = $("input")[0];
+  var caret = input.selectionStart;
+  var oldVal = $(input).val();
+  var newVal = oldVal.slice(0, caret) + character + oldVal.slice(caret);
+  $(input).val(newVal).focus().trigger("change");
+  input.setSelectionRange(caret + 1, caret + 1);
+  return false;
+}
+
 $(window).bind("hashchange", function() {
   var hash = window.location.hash.slice(1);
   var level = hash.match(/^[0-9]+$/) ? parseInt(hash) : 1;
@@ -172,10 +183,6 @@ $(window).bind("hashchange", function() {
 
 $(window).ready(function() {
   var TOUCH_EVT = ("ontouchstart" in window) ? "touchstart" : "click";
-  $("#quick-keys button").bind(TOUCH_EVT, function() {
-    var character = this.firstChild.nodeValue;
-    $("input").val($("input").val() + character).focus().trigger("change");
-    return false;
-  });
+  $("#quick-keys button").bind(TOUCH_EVT, virtualKeypress);
   $(window).trigger("hashchange");
 });
