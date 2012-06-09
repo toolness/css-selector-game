@@ -167,11 +167,17 @@ function loadLevel(number) {
 function virtualKeypress() {
   var character = this.firstChild.nodeValue;
   var input = $("input")[0];
-  var caret = input.selectionStart;
+  // Use selectionEnd instead of selectionStart because Mobile Chrome
+  // sometimes selects-all while in weird Android keyboard autocomplete mode.
+  var caret = input.selectionEnd;
   var oldVal = $(input).val();
   var newVal = oldVal.slice(0, caret) + character + oldVal.slice(caret);
+  var moveCursor = function() { input.setSelectionRange(caret+1, caret+1); };
   $(input).val(newVal).focus().trigger("change");
-  input.setSelectionRange(caret + 1, caret + 1);
+  moveCursor();
+  // Move the cursor after a bit because Mobile Chrome positions it
+  // right before the character we want to be at, for some reason.
+  setTimeout(moveCursor, 100);
   return false;
 }
 
