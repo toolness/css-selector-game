@@ -7,8 +7,21 @@ keystrokes like `#` and `.`, which are typically challenging to type
 on mobile devices. The only keys the player should ever have to directly
 tap on their device's keyboard are the lowercase alphabet and the space bar.
 
-The software has been tested to work on:
+Supported desktop browsers:
 
-* Desktop Firefox
-* Desktop Safari
+* Firefox
+* Safari
+* Chrome
+* Opera
+* Internet Explorer 9
+
+Supported mobile browsers:
+
 * Mobile Safari
+* Mobile Chrome
+
+Unfortunately, support for Mobile Firefox is currently blocked by
+[bug 763201][] and [bug 763203][].
+
+  [bug 763201]: https://bugzilla.mozilla.org/show_bug.cgi?id=763201
+  [bug 763203]: https://bugzilla.mozilla.org/show_bug.cgi?id=763203
