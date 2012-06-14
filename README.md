@@ -21,7 +21,7 @@ Supported mobile browsers:
 * Mobile Chrome
 
 Unfortunately, support for Mobile Firefox is currently blocked by
-[bug 763201][] and [bug 763203][].
+[bug 763201][] and [bug 764817][].
 
   [bug 763201]: https://bugzilla.mozilla.org/show_bug.cgi?id=763201
-  [bug 763203]: https://bugzilla.mozilla.org/show_bug.cgi?id=763203
+  [bug 764817]: https://bugzilla.mozilla.org/show_bug.cgi?id=764817
